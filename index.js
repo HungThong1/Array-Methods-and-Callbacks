@@ -11,35 +11,66 @@ console.log('its working');
 (c) Home Team goals for 2014 world cup final
 (d) Away Team goals for 2014 world cup final
 (e) Winner of 2014 world cup final */
-
+const final2014 = fifaData.filter(function(element){
+    if(element["Year"] === 2014 && element["Stage"] === "Final"){
+        return element;
+    }
+})
+console.log(final2014[0]["Home Team Name"])
+console.log(final2014[0]["Away Team Name"])
+console.log(final2014[0]["Home Team Goals"])
+console.log(final2014[0]["Away Team Goals"])
+if(final2014[0]["Home Team Goals"] > final2014[0]["Away Team Goals"]){
+    console.log(final2014[0]["Home Team Name"])
+}
+else{
+    console.log(final2014[0]["Away Team Name"])
+}
 
 /* Task 2: Create a function called  getFinals that takes `data` as an argument and returns an array of objects with only finals data */
 
-function getFinals(/* code here */) {
+function getFinals(array) {
 
-    /* code here */
-
+    let newarray = [];
+    for(let i = 0; i < array.length; i++){
+      if(array[i].Stage === "Final"){
+        newarray.push(array[i]);
+      }
+    }
+    return newarray
 };
+console.log(getFinals(fifaData))
 
 /* Task 3: Implement a higher-order function called `getYears` that accepts the callback function `getFinals`, and returns an array called `years` containing all of the years in the dataset */
 
-function getYears(/* code here */) {
+function getYears(array,func) {
 
-    /* code here */
-
+let newarray = func(array);
+let yearArray = [];
+for(let i = 0; i < newarray.length; i++){
+    yearArray.push(newarray[i].Year);
+}
+return yearArray
 };
-
-getYears();
+console.log(getYears(fifaData, getFinals))
 
 /* Task 4: Implement a higher-order function called `getWinners`, that accepts the callback function `getFinals()` and determine the winner (home or away) of each `finals` game. Return the name of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
+function getWinners(array, func) {
 
-    /* code here */
-
+    let newarray = func(array);
+    let winnerArray = [];
+    for(let i = 0; i < newarray.length; i++){
+        if(newarray[i]["Home Team Goals"] > newarray[i]["Away Team Goals"]){
+            winnerArray.push(newarray[i]["Home Team Name"]);
+        }
+        else {
+            winnerArray.push(newarray[i]["Away Team Name"]);
+        }
+    }   
+    return winnerArray
 };
-
-getWinners();
+console.log(getWinners(fifaData, getFinals))
 
 /* Task 5: Implement a higher-order function called `getWinnersByYear` that accepts the following parameters and returns a set of strings "In {year}, {country} won the world cup!" 
 
@@ -48,21 +79,34 @@ Parameters:
  * callback function getYears
  */
 
-function getWinnersByYear(/* code here */) {
-
+function getWinnersByYear(yearF, winnerF) {
+    let yearArray = yearF(fifaData, getFinals)
+    let winnerArray = winnerF(fifaData, getFinals)
+    for(let i = 0; i < yearArray.length; i++){
+    console.log("In " + yearArray[i] +", "+ winnerArray[i] + " won the world cup!")
+    }
 };
-
-getWinnersByYear();
+getWinnersByYear(getYears, getWinners);
 
 /* Task 6: Write a function called `getAverageGoals` that accepts a parameter `data` and returns the the average number of home team goals and away team goals scored per match (Hint: use .reduce and do this in 2 steps) */
 
-function getAverageGoals(/* code here */) {
+function getAverageGoals(data) {
+    let homeGoals = [];
+    let awayGoals = [];
 
-    /* code here */
+    data.forEach(function(element){
+         homeGoals.push(element["Home Team Goals"])
+    });
+    data.forEach(function(element){
+        awayGoals.push(element["Away Team Goals"])
+   });
+     const reducer = (accumulator, currentValue, length) => accumulator + currentValue;
+     let homeAverage = homeGoals.reduce(reducer) / homeGoals.length
+     let awayAverage = awayGoals.reduce(reducer) / awayGoals.length
+     return "Average Home Goals: " + homeAverage +"\nAverage Away Goals: " + awayAverage
 
 };
-
-getAverageGoals();
+console.log(getAverageGoals(fifaData))
 
 /// STRETCH 🥅 //
 
